@@ -56,4 +56,4 @@ function getExecutionTime(func, ...args) {
     return endTime - startTime;
 }
 
-var CURRENT_TEST = 10;
+var CURRENT_TEST = 45;
