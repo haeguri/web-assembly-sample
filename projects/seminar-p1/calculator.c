@@ -7,6 +7,13 @@
 typedef enum {false, true} boolean;
 
 EMSCRIPTEN_KEEPALIVE
+int fib(int n) {
+  if (n == 1) return 1;
+  if (n == 2) return 1;
+  return fib(n-1) + fib(n-2);
+}
+
+EMSCRIPTEN_KEEPALIVE
 int get_prime_count(int n) {
     int count = 0;
 

@@ -1,3 +1,20 @@
+window.onload = function() {
+    const body = document.querySelector('body');
+    const button = document.createElement('button');
+    button.innerText = 'Start Test!';
+    button.onclick = function() {
+        startTest();
+    }
+
+    body.appendChild(button);
+}
+
+function jsFib(n) {
+  if (n === 1) return 1;
+  if (n === 2) return 1;
+  return jsFib(n-1) + jsFib(n-2);
+}
+
 function getPrimeCount(n) {
     let count = 0;
 
@@ -39,4 +56,4 @@ function getExecutionTime(func, ...args) {
     return endTime - startTime;
 }
 
-var CURRENT_TEST = 300000;
+var CURRENT_TEST = 10;

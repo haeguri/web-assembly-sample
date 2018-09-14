@@ -9,8 +9,9 @@
     <!-- ASM JS TEST -->
     <script src="./asmjs/a.out.js"></script>
     <script>
-        console.log('ASMJS TEST: ', getExecutionTime(Module._get_prime_count, CURRENT_TEST));
-        Module = undefined;
+        function startTest() {
+            console.log('ASMJS TEST: ', getExecutionTime(Module._fib, CURRENT_TEST));
+        }
     </script>
 </head>
 <body>
