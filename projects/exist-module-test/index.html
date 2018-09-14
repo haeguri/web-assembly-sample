@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./a.out.js"></script>
+    <script>
+        Module.onRuntimeInitialized = async _ => {
+            // C 모듈의 API..
+            const api = {
+                /**
+                 * @method Module.cwrap
+                 * @param {string} functionId
+                 * @param {string} returnType
+                 * @param {string[]} argTypes
+                 */
+                encode: Module.cwrap('encode', '', ['number', 'number', 'number', 'number']),
+                get_result_pointer: Module.cwrap('get_result_pointer', 'number', []),
+                get_result_size: Module.cwrap('get_result_size', 'number', []),
+                free_result: Module.cwrap('free_result', '', ['number']),
+                version: Module.cwrap('version', 'number', []),
+                create_buffer: Module.cwrap('create_buffer', 'number', ['number', 'number']),
+                destroy_buffer: Module.cwrap('destroy_buffer', '', ['number']),
+            };
+
+            // 이미지를 로드 후,
+            // Canvas API를 이용하여 RGBA 이미지 데이가 담긴 Unit8ClampedArray 인스턴스를 반환
+            async function loadImage(src) {
+                // Load image
+                const imgBlob = await fetch(src).then(resp => resp.blob());
+                const img = await createImageBitmap(imgBlob);
+                // Make canvas same size as image
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                // Draw image onto canvas
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                return ctx.getImageData(0, 0, img.width, img.height);
+            }
+
+            const image = await loadImage('./image.jpg');
+            
+            // create_buffer C 함수를 사용하여 바이트 배열을 버퍼에 할당?
+            // p: 바이트 배열이 동적으로 할당 된 메모리 주소(포인터?)
+            const p = api.create_buffer(image.width, image.height); 
+            
+            Module.HEAP8.set(image.data, p);
+            // ... call encoder ...
+            // api.destroy_buffer(p);
+
+            api.encode(p, image.width, image.height, 100);
+            const resultPointer = api.get_result_pointer();
+            const resultSize = api.get_result_size();
+            const resultView = new Uint8Array(Module.HEAP8.buffer, resultPointer, resultSize);
+            const result = new Uint8Array(resultView);
+            api.free_result(resultPointer);
+            const blob = new Blob([result], {type: 'image/webp'});
+            const blobURL = URL.createObjectURL(blob);
+            const img = document.createElement('img');
+            img.src = blobURL;
+            document.body.appendChild(img)
+        };
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

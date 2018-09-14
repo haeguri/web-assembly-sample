@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./common.js"></script>
+    <!-- WASM TEST -->
+    <script src="./wasm/a.out.js"></script>
+    <script>
+        // debugger;
+
+        Module.onRuntimeInitialized = _ => {
+            // debugger;
+            const api = {
+                // factorial: Module.cwrap('factorial', 'number', ['number']),
+            //     sum: Module.cwrap('sum', 'number', ['number', 'number']),
+            //     multiply: Module.cwrap('multiply', 'number', ['number', 'number']),
+                get_prime_count: Module.cwrap('get_prime_count', 'number', ['number'])
+            };
+
+            
+            // console.log(getExecutionTime(api.factorial, 10));
+            // // console.log(getExecutionTime(factorial, 100));
+            // // console.log(getExecutionTime(api.sum, 10, 20));
+            // // console.log(getExecutionTime(api.multiply, 10, 20));
+            // console.log(getExecutionTime(getPrimeCount, 200000));
+            console.log('WASM TEST: ', getExecutionTime(api.get_prime_count, CURRENT_TEST));
+            // // console.log(getExecutionTime(factorial, 100));
+        }
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

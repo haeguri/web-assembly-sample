@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script>
+        var importObject = {
+            env: {
+                STACKTOP: function(arg) {
+                    console.log(arg);
+                }
+            }
+        };
+
+        fetch('a.out.wasm').then(response =>
+            response.arrayBuffer()
+        ).then(bytes => {
+            console.log(bytes);
+            return WebAssembly.instantiate(bytes, importObject)
+        }).then(result =>
+            result.instance.exports.exported_func()
+        );
+
+        // const importObject = {
+        //     sum: arg => console.log(arg)
+        // };
+
+        // WebAssembly.instantiateStreaming(fetch('a.wasm'), importObject)
+        // .then(results => {
+        //     console.log('result is', results);
+        //     // Do something with the results!
+        // })
+        // .catch(results => {
+        //     console.log('result is', results);
+        // });
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
